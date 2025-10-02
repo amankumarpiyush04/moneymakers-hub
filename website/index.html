@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoneyMakers Hub - Your Digital Bookstore</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* CSS variables for consistent theming */
+        :root {
+            --bg-color: #121212;
+            --card-color: #1a1a1a;
+            --border-color: #2c2c2c;
+            --primary-gold: #D4B254;
+            --text-light: #f5f5f5;
+            --text-muted: #a0a0a0;
+            --border-radius: 12px;
+        }
+
+        /* --- MODIFIED: Added Parallax Background --- */
+        body {
+            /* Use the SAME seamless image from your local 'images' folder for both layers */
+            background-image: url('images/night1.jpg'), url('images/night1.jpg');
+            
+            background-color: #0c0c0c; /* A dark fallback color */
+            
+            /* Repeat the image VERTICALLY to create the continuous scroll effect */
+            background-repeat: repeat-y;
+            
+            /* These properties are required for the effect to work */
+            background-attachment: fixed;
+            background-position: center 0;
+            background-size: cover;
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+            overflow-x: hidden; 
+        }
+
+        /* --- ADDED: CSS for the Glowing Mouse Spotlight --- */
+        .spotlight {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Puts it behind content but on top of the body background */
+            pointer-events: none; /* Lets you click through it */
+            background: radial-gradient(
+                circle 300px at var(--cursorX) var(--cursorY),
+                rgba(212, 178, 84, 0.1),
+                transparent 80%
+            );
+        }
+
+        .logo img {
+            height: 30px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        /* --- Header & Navigation --- */
+        .header {
+            /* Modified for transparency to see the parallax effect */
+            background-color: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .promo-banner {
+            background-color: #222;
+            color: var(--text-light);
+            text-align: center;
+            padding: 10px 0;
+            font-size: 0.9em;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-light);
+            text-decoration: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--text-light);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .nav-actions .icon-link {
+            color: var(--text-muted);
+            font-size: 1.2em;
+            transition: color 0.3s;
+        }
+        .nav-actions .icon-link:hover {
+            color: var(--text-light);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .btn-secondary {
+            border: 1px solid var(--primary-gold);
+            color: var(--primary-gold);
+        }
+        .btn-secondary:hover {
+            background-color: var(--primary-gold);
+            color: var(--bg-color);
+        }
+        .btn-primary {
+            background-color: var(--primary-gold);
+            color: var(--bg-color);
+            border: 1px solid var(--primary-gold);
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        /* --- Section Styling --- */
+        section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .section-header h2 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .section-header p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .tag {
+            background-color: var(--primary-gold);
+            color: var(--bg-color);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 50px;
+            padding-top: 60px;
+        }
+        .hero-content h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+        }
+        .hero-content p {
+            font-size: 1.1em;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+        .hero-actions {
+            display: flex;
+            gap: 15px;
+        }
+        .hero-rating {
+            margin-top: 30px;
+            color: var(--text-muted);
+        }
+        .hero-rating .fas {
+            color: #FFC107;
+        }
+
+        .hero-images {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .hero-images img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+        }
+
+        /* --- Trending Section --- */
+        .trending-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+        .book-card {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        .book-card-img {
+            width: 95%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .book-card-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .book-card h3 {
+            margin: 10px 0 5px;
+        }
+        .book-card .author {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .book-card .rating {
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+        .book-card .rating .fas { color: #FFC107; }
+
+        .book-card .price {
+            margin-top: auto;
+            font-size: 1.2em;
+            font-weight: 700;
+        }
+        .book-card .price .old-price {
+            text-decoration: line-through;
+            color: var(--text-muted);
+            font-size: 0.8em;
+            margin-left: 5px;
+        }
+        .book-card .btn-add-to-cart {
+            width: 100%;
+            margin-top: 15px;
+            background-color: var(--primary-gold);
+            color: var(--bg-color);
+            text-align: center;
+        }
+
+        /* --- Features Section --- */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+        .feature-card {
+            background-color: var(--card-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            text-align: left;
+        }
+        .feature-card .icon {
+            font-size: 1.5em;
+            color: var(--primary-gold);
+            margin-bottom: 15px;
+        }
+        .feature-card h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .feature-card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* --- Testimonials Section --- */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        .testimonial-card {
+            background-color: var(--card-color);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+        }
+        .testimonial-card .rating .fas { color: #FFC107; }
+        .testimonial-card .quote-text {
+            margin: 20px 0;
+            color: var(--text-light);
+            line-height: 1.7;
+            font-style: italic;
+        }
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .author-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+        .author-info .name {
+            font-weight: 700;
+        }
+        .author-info .title {
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+
+        /* --- Stats Bar Section --- */
+        .stats-bar {
+            background-color: var(--card-color);
+            padding: 40px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+        .stat-item h3 {
+            font-size: 2em;
+            color: var(--primary-gold);
+            margin: 0 0 5px 0;
+        }
+        .stat-item p {
+            margin: 0;
+            color: var(--text-muted);
+        }
+
+        /* --- Newsletter Section --- */
+        .newsletter-section {
+            text-align: center;
+        }
+        .newsletter-form {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .newsletter-form input {
+            width: 300px;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-color);
+            color: var(--text-light);
+        }
+        .newsletter-form button {
+            padding: 15px 30px;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: #0c0c0c;
+            padding: 60px 0;
+            border-top: 1px solid var(--border-color);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 40px;
+        }
+        .footer-col h4 {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .footer-col p, .footer-col ul li {
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .footer-col ul a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer-col ul a:hover {
+            color: var(--primary-gold);
+        }
+        .footer-col .contact-info i {
+            margin-right: 10px;
+            color: var(--primary-gold);
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="spotlight"></div>
+
+    <header class="header">
+        <div class="promo-banner">
+            ✨ Special Offer: Get 30% off your first purchase with code <span class="highlight">WELCOME30</span>
+        </div>
+      <nav class="container navbar">
+    <a href="index.html" class="logo">
+        <img src="images/profile_mindsetacademy04.jpg" alt="MoneyMakers Hub Logo"> MoneyMakers Hub
+    </a>
+    <div class="nav-links">
+        <a href="catalog.html">Browse</a>
+        <a href="#">Bestsellers</a>
+        <a href="#">Categories</a>
+    </div>
+   <div class="nav-actions">
+    <a href="cart.html" class="icon-link"><i class="fas fa-shopping-cart"></i></a>
+    
+    <a href="login.html" class="btn btn-secondary" id="signin-btn">Sign In</a>
+    
+    <div id="user-profile" style="display: none; align-items: center; gap: 15px;">
+        <a href="#" class="icon-link"><i class="fas fa-user-circle" style="font-size: 1.5em;"></i></a>
+        <a href="#" id="logout-btn" style="color: var(--text-muted); text-decoration: none;">Logout</a>
+    </div>
+
+    <a href="catalog.html" class="btn btn-primary">Start Reading</a>
+</div>
+</nav>
+    </header>
+
+    <main>
+
+        <section class="hero-section">
+            <div class="container hero">
+                <div class="hero-content">
+                    
+                    <h1>Discover Your Next <span class="highlight">Great Read</span></h1>
+                    <p>Access premium e-books across every genre. From bestselling self-help to cutting-edge business guides, find your perfect digital library companion.</p>
+                    <div class="hero-actions">
+                        <a href="#" class="btn btn-primary">Browse Books Now</a>
+                        <a href="#" class="btn btn-secondary">Free Preview</a>
+                    </div>
+                    <div class="hero-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        4.3/5 from 500+ readers
+                    </div>
+                </div>
+                <div class="hero-images">
+                    <img src="images/hidden hand  pic.jpg" alt="The Hidden Hand book cover">
+                    <img src="images/covert influence pic.jpg" alt="Covert Influence book cover">
+                    <img src="images/unleashing front page.jpg" alt="Unleashing Your Potential book cover">
+                    <img src="images/book4.jpg" alt="The King's Ledger book cover">
+                </div>
+            </div>
+        </section>
+
+        <section class="trending-section">
+            <div class="container">
+                <div class="section-header">
+
+                    <h2>Trending <span class="highlight">This Week</span></h2>
+                    <p>Discover the most popular e-books that readers can't put down.</p>
+                </div>
+                <div class="trending-grid">
+                    <div class="book-card">
+                        <img class="book-card-img" src="images/hidden hand  pic.jpg" alt="The Hidden Hand book cover">
+                        <div class="book-card-content">
+                            <h3>THE HIDDEN HAND</h3>
+                            <p class="author">by money moneymakershub</p>
+                            <p class="rating">
+                                <i class="fas fa-star"></i> 4.3 (100+)
+                            </p>
+                            <div class="price">
+                                $4.99 <span class="old-price">$19.99</span>
+                            </div>
+                            <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                        </div>
+                    </div>
+                    <div class="book-card">
+                        <img class="book-card-img" src="images/covert influence pic.jpg" alt="Covert Influence book cover">
+                        <div class="book-card-content">
+                            <h3>THE COVERT INFLUENCE</h3>
+                            <p class="author">by money moneymakershub</p>
+                            <p class="rating">
+                                <i class="fas fa-star"></i> 4.8 (243)
+                            </p>
+                            <div class="price">
+                                $4.99 <span class="old-price">$19.99</span>
+                            </div>
+                            <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                        </div>
+                    </div>
+                    <div class="book-card">
+                        <img class="book-card-img" src="images/unleashing front page.jpg" alt="Unleashing Your Potential book cover">
+                        <div class="book-card-content">
+                            <h3>UNLEASHING YOUR POTENTIAL</h3>
+                            <p class="author">by money moneymakershub</p>
+                            <p class="rating">
+                                <i class="fas fa-star"></i> 4.7 (40)
+                            </p>
+                            <div class="price">
+                                FREE <span class="old-price">$14.99</span>
+                            </div>
+                            <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                        </div>
+                    </div>
+                    <div class="book-card">
+                        <img class="book-card-img" src="images/book4.jpg" alt="The King's Ledger book cover">
+                        <div class="book-card-content">
+                            <h3>THE KING'S LEDGER</h3>
+                            <p class="author">by money moneymakershub</p>
+                            <p class="rating">
+                                <i class="fas fa-star"></i> 4.9 (94)
+                            </p>
+                                <div class="price">
+                                    FREE <span class="old-price">$12.99</span>
+                                </div>
+                            <a href="#" class="btn btn-add-to-cart">Add to Cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features-section">
+            <div class="container">
+                <div class="section-header">
+                        <p class="tag">Why Choose Us</p>
+                    <h2>Reading Made <span class="highlight">Effortless</span></h2>
+                    <p>Experience the future of reading with our premium digital platform designed for book lovers.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="icon"><i class="fas fa-download"></i></div>
+                        <h3>Instant Downloads</h3>
+                        <p>Get your books instantly after purchase. No waiting, no shipping delays.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h3>Multi-Device Access</h3>
+                        <p>Read on any device - phone, tablet, e-reader, or computer. Your library syncs everywhere.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon"><i class="fas fa-cloud"></i></div>
+                        <h3>Cloud Storage</h3>
+                        <p>Your books are safely stored in the cloud. Never lose your collection again.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon"><i class="fas fa-book-reader"></i></div>
+                        <h3>Interactive Reading</h3>
+                        <p>Adjustable fonts, night mode, bookmarks, and note-taking features.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon"><i class="fas fa-search"></i></div>
+                        <h3>Advanced Search</h3>
+                        <p>Find exactly what you're looking for with our intelligent search and filtering.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon"><i class="fas fa-eye"></i></div>
+                        <h3>Free Previews</h3>
+                        <p>Sample any book before you buy. Read the first chapter completely free.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials-section">
+            <div class="container">
+                <div class="section-header">
+                    <p class="tag">Reader Reviews</p>
+                    <h2>What Our <span class="highlight">Readers Say</span></h2>
+                    <p>Join thousands of satisfied readers who have transformed their reading experience.</p>
+                </div>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="quote-text">"This platform has completely transformed my reading habits. The instant access and seamless sync across devices means I can read anywhere, anytime. The collection is absolutely incredible!"</p>
+                        <div class="author-info">
+                            <img src="images/supri (1).jpg" alt="SUPRIYA DAS">
+                            <div>
+                                <p class="name">SUPRIYA DAS</p>
+                                <p class="title">Student</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="quote-text">"As someone who travels frequently, having my entire library in the cloud is a game-changer. The search functionality is outstanding, and I love the interactive features."</p>
+                        <div class="author-info">
+                            <img src="https://i.pravatar.cc/150?img=2" alt="SUNIL TRIPATHI">
+                            <div>
+                                <p class="name">SUNIL TRIPATHI</p>
+                                <p class="title">Government Employee</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+            <section class="stats-bar">
+            <div class="container stats-container">
+                <div class="stat-item">
+                    <h3>4.9/5</h3>
+                    <p>Average Rating</p>
+                </div>
+                <div class="stat-item">
+                    <h3>500+</h3>
+                    <p>Happy Readers</p>
+                </div>
+                <div class="stat-item">
+                    <h3>99.8%</h3>
+                    <p>Satisfaction Rate</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="newsletter-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Stay Updated with <span class="highlight">New Releases</span></h2>
+                    <p>Subscribe to our newsletter and be the first to know about new books, exclusive deals, and reading recommendations.</p>
+                </div>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Enter your email">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Subscribe</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <a href="#" class="logo">
+                    <i class="fas fa-book-open"></i> MoneyMakers Hub
+                </a>
+                <p>Your premium destination for digital books. Discover, read, and explore thousands of titles across every genre.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">Browse Books</a></li>
+                    <li><a href="#">New Releases</a></li>
+                    <li><a href="#">Bestsellers</a></li>
+                    <li><a href="#">Free Books</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Categories</h4>
+                <ul>
+                    <li><a href="#">Business & Finance</a></li>
+                    <li><a href="#">Science & Technology</a></li>
+                    <li><a href="#">Fiction & Literature</a></li>
+                    <li><a href="#">Self-Help</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <ul class="contact-info">
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Reading Street, Book City, BC 12345</li>
+                    <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                    <li><i class="fas fa-envelope"></i> support@moneymakershub.com</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- Glowing Mouse Spotlight Logic (Existing) ---
+        const spotlight = document.querySelector('.spotlight');
+        window.addEventListener('mousemove', (e) => {
+            spotlight.style.setProperty('--cursorX', e.clientX + 'px');
+            spotlight.style.setProperty('--cursorY', e.clientY + 'px');
+        });
+
+        // --- ADDED: Parallax Scroll Logic ---
+        const bodyElement = document.body;
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+
+            // Adjust these numbers for different speeds
+            const closerLayerSpeed = 0.5; 
+            const distantLayerSpeed = 0.2;
+
+            const closerY = scrollY * closerLayerSpeed;
+            const distantY = scrollY * distantLayerSpeed;
+
+            bodyElement.style.backgroundPosition = `center ${closerY}px, center ${distantY}px`;
+        });
+    </script>
+<script>
+    // Parallax Scroll JavaScript
+    window.addEventListener('scroll', () => {
+        const bodyElement = document.body; // Moved this line inside the function
+        const scrollY = window.scrollY;
+        const closerLayerSpeed = 0.5; 
+        const distantLayerSpeed = 0.2;
+        const closerY = scrollY * closerLayerSpeed;
+        const distantY = scrollY * distantLayerSpeed;
+        
+        // Added a check to be extra safe
+        if (bodyElement) { 
+            bodyElement.style.backgroundPosition = `center ${closerY}px, center ${distantY}px`;
+        }
+    });
+
+    // Header and Authentication Logic
+    document.addEventListener('DOMContentLoaded', () => {
+        const signinBtn = document.getElementById('signin-btn');
+        const userProfile = document.getElementById('user-profile');
+        const logoutBtn = document.getElementById('logout-btn');
+        const token = localStorage.getItem('authToken');
+
+        // Check if elements exist before trying to modify them
+        if (signinBtn && userProfile) {
+            if (token) {
+                signinBtn.style.display = 'none';
+                userProfile.style.display = 'flex';
+            } else {
+                signinBtn.style.display = 'block';
+                userProfile.style.display = 'none';
+            }
+        }
+
+        // Logout functionality
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+                localStorage.removeItem('authToken');
+                window.location.href = 'index.html';
+            });
+        }
+    });
+</script>
+</body>
+</html>
